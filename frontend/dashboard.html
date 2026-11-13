@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Nova AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+        <div class="logo">NOVA<span>.</span></div>
+
+        <a href="/dashboard.html" class="active">◈ Dashboard</a>
+        <a href="#profile">◉ My Profile</a>
+        <a href="#analytics">▦ Analytics</a>
+        <a href="#settings">⚙ Settings</a>
+
+        <a href="#" class="logout" id="logout">↪ Logout</a>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <h1>Dashboard</h1>
+                <p>Welcome back, <span id="welcomeName">User</span>. Here's your workspace overview.</p>
+            </div>
+
+            <div class="profile-badge" id="profileBadge">U</div>
+        </header>
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon">👤</div>
+                <p>Account Status</p>
+                <h2>Active</h2>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🔐</div>
+                <p>Security</p>
+                <h2>Protected</h2>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">⚡</div>
+                <p>Platform</p>
+                <h2>NOVA AI</h2>
+            </div>
+
+        </section>
+
+        <section class="ai-banner">
+            <h2>✨ Welcome to your intelligent workspace</h2>
+
+            <p>
+                Your NOVA workspace is ready.
+                Manage your account, explore your profile
+                and access your personalized dashboard
+                from one place.
+            </p>
+        </section>
+
+        <section class="content-card" id="profile">
+
+            <h3>Account Information</h3>
+
+            <div class="profile-details">
+
+                <div class="detail-item">
+                    <p>FULL NAME</p>
+                    <h4 id="userName">Loading...</h4>
+                </div>
+
+                <div class="detail-item">
+                    <p>EMAIL ADDRESS</p>
+                    <h4 id="userEmail">Loading...</h4>
+                </div>
+
+                <div class="detail-item">
+                    <p>ACCOUNT STATUS</p>
+                    <h4>Active</h4>
+                </div>
+
+                <div class="detail-item">
+                    <p>ACCOUNT TYPE</p>
+                    <h4>Standard User</h4>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="content-card" id="analytics">
+            <h3>Platform Overview</h3>
+
+            <p style="color: #929bb5; line-height: 1.8;">
+                Your account is successfully connected to the
+                NOVA platform. Your information is stored in
+                MongoDB and managed by our Flask backend.
+            </p>
+        </section>
+
+        <section class="content-card" id="settings">
+            <h3>Workspace Settings</h3>
+
+            <p style="color: #929bb5;">
+                Your account settings and preferences will be
+                available here.
+            </p>
+        </section>
+
+    </main>
+
+</div>
+
+<script src="/static/script.js"></script>
+
+<script>
+async function loadDashboard() {
+
+    try {
+        const response = await fetch("/api/me");
+
+        if (!response.ok) {
+            window.location.href = "/login.html";
+            return;
+        }
+
+        const result = await response.json();
+        const user = result.user;
+
+        document.getElementById("welcomeName").textContent = user.name;
+        document.getElementById("userName").textContent = user.name;
+        document.getElementById("userEmail").textContent = user.email;
+        document.getElementById("profileBadge").textContent =
+            user.name.charAt(0).toUpperCase();
+
+    } catch (error) {
+        console.error("Dashboard error:", error);
+    }
+}
+
+document.getElementById("logout").addEventListener("click", async function(event) {
+
+    event.preventDefault();
+
+    await fetch("/api/logout", {
+        method: "POST"
+    });
+
+    window.location.href = "/login.html";
+});
+
+loadDashboard();
+</script>
+
+</body>
+</html>
